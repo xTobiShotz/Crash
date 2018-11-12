@@ -13,7 +13,6 @@ var emoji = [
     "\u0039\u20E3", //9
 ];
 
-
 module.exports = async (bot, message, args, Discord, moment) => {
 
     let manganame = args.join(' ');
@@ -42,31 +41,31 @@ module.exports = async (bot, message, args, Discord, moment) => {
                 },
                 "fields": [
                     {
-                        "name": filter0.data[0].attributes.canonicalTitle,
+                        "name": `${filter0.data[0].attributes.canonicalTitle} - ${bot.caps(filter0.data[0].type)} - ${filter0.data[0].id}`,
                         "value": `Reaction: ${emoji[1]}`
                     },
                     {
-                        "name": filter0.data[1].attributes.canonicalTitle,
+                        "name": `${filter0.data[1].attributes.canonicalTitle} - ${bot.caps(filter0.data[1].type)} - ${filter0.data[1].id}`,
                         "value": `Reaction: ${emoji[2]}`
                     },
                     {
-                        "name": filter0.data[2].attributes.canonicalTitle,
+                        "name": `${filter0.data[2].attributes.canonicalTitle} - ${bot.caps(filter0.data[2].type)} - ${filter0.data[2].id}`,
                         "value": `Reaction: ${emoji[3]}`
                     },
                     {
-                        "name": filter0.data[3].attributes.canonicalTitle,
+                        "name": `${filter0.data[3].attributes.canonicalTitle} - ${bot.caps(filter0.data[3].type)} - ${filter0.data[3].id}`,
                         "value": `Reaction: ${emoji[4]}`
                     },
                     {
-                        "name": filter0.data[4].attributes.canonicalTitle,
+                        "name": `${filter0.data[4].attributes.canonicalTitle} - ${bot.caps(filter0.data[4].type)} - ${filter0.data[4].id}`,
                         "value": `Reaction: ${emoji[5]}`
                     },
                     {
-                        "name": filter0.data[5].attributes.canonicalTitle,
+                        "name": `${filter0.data[5].attributes.canonicalTitle} - ${bot.caps(filter0.data[5].type)} - ${filter0.data[5].id}`,
                         "value": `Reaction: ${emoji[6]}`
                     },
                     {
-                        "name": filter0.data[6].attributes.canonicalTitle,
+                        "name": `${filter0.data[6].attributes.canonicalTitle} - ${bot.caps(filter0.data[6].type)} - ${filter0.data[6].id}`,
                         "value": `Reaction: ${emoji[7]}`
                     },
                     {
@@ -155,16 +154,61 @@ module.exports = async (bot, message, args, Discord, moment) => {
                         let chapters = res0.data[i].attributes.chapterCount
                         let genres = res0.data[i].relationships.categories.links.related
 
-                        let startfilter = startdate.split("-")
-                        let start = startfilter[2] + "." + startfilter[1] + "." + startfilter[0]
+                        if (startdate === null && enddate === null) {
+                            start = "No Startdate in the Database."
+                            end = "No Enddate in the Database."
+                        };
+
+                        let startfilter
+                        let start
+                        if (startdate === null) {
+                            start = "Not Running or no Data in Database."
+                        } else {
+                            startfilter = startdate.split("-")
+                            start = startfilter[2] + "." + startfilter[1] + "." + startfilter[0]
+                        };
 
                         let endfilter
                         let end
                         if (enddate === null) {
-                            end = "running"
+                            end = "Running"
                         } else {
                             endfilter = enddate.split("-")
                             end = endfilter[2] + "." + endfilter[1] + "." + endfilter[0]
+                        };
+
+                        if (avgRating === null) {
+                            avgRating = "No Data in Database."
+                        } else {
+                            avgRating = avgRating + "%"
+                        };
+
+                        if (favcount === null) {
+                            favcount = "No Data in Database."
+                        };
+
+                        if (poprank === null) {
+                            poprank = "No Data in Database."
+                        };
+
+                        if (ratingrank === null) {
+                            ratingrank = "No Data in Database."
+                        };
+
+                        if (subtype === null) {
+                            subtype = "No Data in Database."
+                        } else {
+                            subtype = bot.caps(subtype);
+                        };
+
+                        if (status === null) {
+                            status = "No Data in Database."
+                        } else {
+                            status = bot.caps(status);
+                        };
+
+                        if (posterIMG === null) {
+                            posterIMG = 'https://cdn.glitch.com/6343387a-229e-4206-a441-3faed6cbf092%2Foie_canvas%20(1).png?1541619925848'
                         };
 
                         if (chapters === null) {
@@ -173,7 +217,9 @@ module.exports = async (bot, message, args, Discord, moment) => {
 
                         if (coverIMG === null) {
                             coverIMG = ""
-                        }else{ coverIMG = coverIMG.original};
+                        } else {
+                            coverIMG = coverIMG.original
+                        };
 
                         await fetch(`${genres}`, {
                             method: 'GET',
@@ -181,9 +227,19 @@ module.exports = async (bot, message, args, Discord, moment) => {
                         })
                             .then(res1 => res1.json())
                             .then(async res1 => {
-                                var genreval = [];
-                                for (var o = 0; o < res1.data.length; o++) {
-                                    genreval.push(res1.data[o].attributes.title);
+                                var genreval = []
+                                if (res1.data[0].attributes.title === null) {
+                                    genreval.push(null)
+                                } else {
+                                    for (var o = 0; o < res1.data.length; o++) {
+                                        genreval.push(res1.data[o].attributes.title)
+                                    };
+                                };
+
+                                if (genreval == null || genreval == "") {
+                                    genreval = "No Genres in Database."
+                                } else {
+                                    genreval = genreval.join(", ");
                                 };
 
                                 const embed = new Discord.RichEmbed()
@@ -195,12 +251,12 @@ module.exports = async (bot, message, args, Discord, moment) => {
                                     .setThumbnail(posterIMG)
                                     .setTimestamp()
                                     .setURL(url)
-                                    .addField('Genre:', genreval.join(", "))
+                                    .addField('Genre:', genreval)
                                     .addField('Chapters:', chapters)
-                                    .addField('Status:', status.charAt(0).toUpperCase() + status.substring(1))
-                                    .addField('Aired:', `${subtype.charAt(0).toUpperCase() + subtype.substring(1)} ${start} - ${end}`)
-                                    .addField('Type:', type.charAt(0).toUpperCase() + type.substring(1))
-                                    .addField('Community Rating:', avgRating + "%")
+                                    .addField('Status:', status)
+                                    .addField('Published:', `${subtype} ${start} - ${end}`)
+                                    .addField('Type:', bot.caps(type))
+                                    .addField('Community Rating:', avgRating)
                                     .addField('Favorit Counter:', favcount)
                                     .addField('Popularity Rank:', poprank)
                                     .addField('Rating Rank:', ratingrank)
@@ -216,6 +272,5 @@ module.exports = async (bot, message, args, Discord, moment) => {
                     message.channel.send(`${user}, you didn't react fast enough, try again!`);
                 } else { return }
             });
-
         });
 };
