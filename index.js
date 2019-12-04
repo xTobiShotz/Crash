@@ -32,17 +32,23 @@ bot.commands.set("kitsuanime", require("./commands/searchanimekitsu.js"));
 bot.commands.set("anilistmanga", require("./commands/searchmanga.js"));
 bot.commands.set("kitsumanga", require("./commands/searchmangakitsu.js"));
 bot.commands.set("rdmanime", require("./commands/randomanime.js"));
+bot.commands.set("kitsurdmanime", require("./commands/randomanimekitsu.js"));
 bot.commands.set("rdmmanga", require("./commands/randommanga.js"));
+bot.commands.set("kitsurdmmanga", require("./commands/randommangakitsu.js"));
 bot.commands.set("character", require("./commands/searchcharacter.js"));
 bot.commands.set("staff", require("./commands/searchstaff.js"));
 bot.commands.set("poll", require("./commands/poll.js"));
 bot.commands.set("test", require("./commands/test.js"));
 bot.commands.set("p2w", require("./commands/userp2w.js"));
+bot.commands.set("kitsup2w", require("./commands/userp2wkitsu.js"));
 bot.commands.set("p2r", require("./commands/userp2r.js"));
+bot.commands.set("kitsup2r", require("./commands/userp2rkitsu.js"));
 bot.commands.set("antibully", require("./commands/antibully.js"));
 bot.commands.set("antiantibully", require("./commands/antiantibully.js"));
 bot.commands.set("yt", require("./commands/youtubesearch.js"));
 bot.commands.set("animekitsu", require("./commands/searchanimekitsu.js"));
+bot.commands.set("music", require("./commands/music.js"));
+bot.commands.set("rewatch", require("./commands/randomrewatchanime.js"));
 
 bot.login(bot.token);
 
